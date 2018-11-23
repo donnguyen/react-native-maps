@@ -50,7 +50,13 @@
 - (void) createTileOverlayAndRendererIfPossible
 {
     if (!_urlTemplateSet) return;
-    self.tileOverlay = [[MKTileOverlay alloc] initWithURLTemplate:self.urlTemplate];
+
+    if([self.urlTemplate rangeOfString:@"{y-tms}"].length){
+        self.urlTemplate = [self.urlTemplate stringByReplacingOccurrencesOfString:@"{y-tms}"withString:@"{y}"];
+        self.tileOverlay = [[MKTileOverlayTMS alloc] initWithURLTemplate:self.urlTemplate];
+    } else {
+        self.tileOverlay = [[MKTileOverlay alloc] initWithURLTemplate:self.urlTemplate];
+    }
 
     self.tileOverlay.canReplaceMapContent = self.shouldReplaceMapContent;
 
